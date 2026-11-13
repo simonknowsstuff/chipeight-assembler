@@ -1,0 +1,7 @@
+CLS
+LD V0, 10
+LD F, V0
+LD V1, 10
+LD V2, 10
+DRW V1, V2, 0x5
+JP 0x20C

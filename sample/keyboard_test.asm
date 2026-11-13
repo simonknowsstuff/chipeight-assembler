@@ -1,0 +1,12 @@
+LD V0, K
+
+CLS
+
+LD F, V0
+
+LD V0, 28
+LD V1, 14
+
+DRW V0, V1, 0x5
+
+JP 0x200

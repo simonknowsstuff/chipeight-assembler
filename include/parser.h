@@ -3,11 +3,11 @@
 #include <cstdint>
 #include <vector>
 #include "token.h"
-#include <stdexcept>
 
 class ParsingErrorException : public std::exception {
 private:
     std::string message;
+    std::uint8_t current_addr;
 
 public:
     ParsingErrorException(const char* msg) :
@@ -89,6 +89,8 @@ private:
 
     void parse_f();
 
+    void parse_label();
+
     uint16_t parse_hex(char hex);
 
     uint16_t parse_register();
@@ -100,9 +102,9 @@ private:
     uint16_t parse_nibble();
 
 public:
-    Parser(std::vector<Token> tokens);
+    Parser();
 
-    uint16_t parse();
+    uint16_t parse(std::vector<Token> tokens);
 };
 
 #endif //CHIPEIGHT_ASSEMBLER_INSTRUCTIONS_H

@@ -1,20 +1,17 @@
-#include "parser.h"
+#include "../include/parser.h"
 
 #include <iostream>
 
-Parser::Parser(std::vector<Token> tokens) {
-    _tokens = tokens;
+Parser::Parser() {
 }
 
-uint16_t Parser::parse() {
+uint16_t Parser::parse(std::vector<Token> tokens) {
+    _tokens = tokens;
     parse_instruction();
     return opcode;
 }
 
 void Parser::parse_instruction() {
-    if (_tokens[pos].get_type() != Token::instr) { // Check if token actually is an instruction
-        throw ParsingErrorException(_tokens[pos].get_content() + " is not an instruction");
-    }
     ++pos;
     // Call appropriate parse function for instruction:
     if (_tokens[pos-1].get_content() == "SYS") {
@@ -57,7 +54,13 @@ void Parser::parse_instruction() {
         parse_skp();
     } else if (_tokens[pos-1].get_content() == "SKNP") {
         parse_sknp();
+    } else {
+        throw ParsingErrorException(_tokens[pos].get_content() + " is not an instruction");
     }
+}
+
+void Parser::parse_label() {
+
 }
 
 void Parser::parse_comma() {

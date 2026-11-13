@@ -14,7 +14,7 @@ private:
 
     std::regex byte_matcher = std::regex("[A-F0-9][A-F0-9]");
 
-    std::regex addr_matcher = std::regex("[A-F0-9][A-F0-9][A-F0-9]");
+    std::regex addr_matcher = std::regex("0x[A-F0-9][A-F0-9][A-F0-9]");
 
     std::regex nibble_matcher = std::regex("0x[A-F0-9]");
 

@@ -1,10 +1,11 @@
-#include "tokenizer.h"
+#include "../include/tokenizer.h"
 
 Tokenizer::Tokenizer() {
     // Initialize tokenizer
 }
 
 std::vector<Token> Tokenizer::tokenize(std::string input) {
+    _tokens.clear(); // Clear all tokens before tokenizing input
     // Tokenize every string on the basis of spaces and commas
     std::sregex_token_iterator it(
         input.begin(), input.end(), token_delimiter

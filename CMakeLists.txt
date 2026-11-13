@@ -4,11 +4,15 @@ project(chipeight_assembler)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(chipeight_assembler main.cpp
-        tokenizer.cpp
-        tokenizer.h
-        token.h
-        parser.cpp
-        parser.h
-        translator.cpp
-        translator.h
+        src/tokenizer.cpp
+        include/tokenizer.h
+        include/token.h
+        src/parser.cpp
+        include/parser.h
+        src/translator.cpp
+        include/translator.h
+        src/tester.cpp
+        include/tester.h
+        src/reader.cpp
+        include/reader.h
 )
