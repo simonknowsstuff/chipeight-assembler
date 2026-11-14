@@ -12,12 +12,15 @@ std::pair<uint8_t, uint8_t> Translator::split_opcode(const uint16_t opcode) {
     return std::pair {first_half, second_half};
 }
 
-void Translator::add_opcode(const uint16_t opcode) {
-    _opcodes.push_back(opcode);
+void Translator::add_instruction(const Instruction instr) {
+    if (!instr.is_fully_parsed()) { // Label / invalid opcode
+        return;
+    }
+    _instructions.push_back(instr);
 }
 
-void Translator::load_opcodes(const std::vector<uint16_t> opcodes) {
-    _opcodes = opcodes;
+void Translator::load_instructions(const std::vector<Instruction>& instructions) {
+    _instructions = instructions;
 }
 
 void Translator::translate_to_file(const std::string& filename) {
@@ -26,8 +29,8 @@ void Translator::translate_to_file(const std::string& filename) {
     if (!wf || !wf.is_open()) {
         throw std::runtime_error("Could not write into file " + filename);
     }
-    for (const auto opcode : _opcodes) {
-        auto [high, low] = split_opcode(opcode);
+    for (const auto instr : _instructions) {
+        auto [high, low] = split_opcode(instr.get_opcode());
         const uint8_t bytes[] = {high, low};
         wf.write(reinterpret_cast<const char *>(bytes), 2);
     }

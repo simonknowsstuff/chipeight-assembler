@@ -10,17 +10,20 @@ class Tokenizer {
 private:
     std::vector<Token> _tokens;
 
-    std::regex reg_matcher = std::regex("V[A-F0-9]");
+    // Programs should not access register F, so we limit till E
+    std::regex reg_matcher = std::regex(R"(V[A-E0-9])");
 
-    std::regex byte_matcher = std::regex("[A-F0-9][A-F0-9]");
+    std::regex byte_matcher = std::regex(R"([A-F0-9]{2})");
 
-    std::regex addr_matcher = std::regex("0x[A-F0-9][A-F0-9][A-F0-9]");
+    std::regex addr_matcher = std::regex(R"(0x[A-F0-9]{3})");
 
-    std::regex nibble_matcher = std::regex("0x[A-F0-9]");
+    std::regex nibble_matcher = std::regex(R"(0x[A-F0-9])");
 
-    // std::regex label_matcher = std::regex(R"(\\w+:)");
+    std::regex label_matcher = std::regex(R"([A-Za-z_][A-Za-z0-9_]*)");
 
-    std::regex token_delimiter = std::regex(R"(\w+|,|\[\w+\]|\.[A-Z]+)");
+    std::regex token_delimiter = std::regex(
+        R"(\[I\]|\.BCD|0[xX][0-9A-Fa-f]+|[A-Za-z_][A-Za-z0-9_]*|[0-9]+|,|:)"
+    );
 
     const std::array<std::string, 21> INSTRUCTIONS = {
         "SYS", "CLS", "RET", "JP", "CALL", "SE", "SNE",
@@ -30,7 +33,9 @@ private:
 
     Token::Type determine_token(const std::string &token);
 
-    // bool is_label(const std::string& token);
+    bool is_label(const std::string& token);
+
+    bool is_colon(const std::string& token);
 
     bool is_instr(const std::string &token);
 

@@ -3,19 +3,20 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include "instruction.h"
 
 class Translator {
 private:
-    std::vector<uint16_t> _opcodes;
+    std::vector<Instruction> _instructions;
 
     std::pair<uint8_t, uint8_t> split_opcode(uint16_t opcode);
 
 public:
     Translator();
 
-    void add_opcode(uint16_t opcode);
+    void add_instruction(const Instruction instr);
 
-    void load_opcodes(const std::vector<std::uint16_t> opcodes);
+    void load_instructions(const std::vector<Instruction>& instructions);
 
     void translate_to_file(const std::string& filename);
 };

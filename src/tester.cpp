@@ -12,11 +12,11 @@ void Tester::parse_test_cases() {
     };
 
     const std::vector cases = {
-        TestCase("SYS 300", 0x0300, true),
+        TestCase("SYS 0x300", 0x0300, true),
         TestCase("CLS", 0x00E0, true),
         TestCase("RET", 0x00EE, true),
-        TestCase("JP 300", 0x1300, true),
-        TestCase("CALL 300", 0x2300, true),
+        TestCase("JP 0x300", 0x1300, true),
+        TestCase("CALL 0x300", 0x2300, true),
         TestCase("SE V4, 28", 0x3428, true),
         TestCase("SNE V4, 28", 0x4428, true),
         TestCase("SE V4, V5", 0x5450, true),
@@ -32,8 +32,8 @@ void Tester::parse_test_cases() {
         TestCase("SUBN V4, V5", 0x8457, true),
         TestCase("SHL V4", 0x840E, true),
         TestCase("SNE V4, V5", 0x9450, true),
-        TestCase("LD I, 300", 0xA300, true),
-        TestCase("JP V0, 300", 0xB300, true),
+        TestCase("LD I, 0x300", 0xA300, true),
+        TestCase("JP V0, 0x300", 0xB300, true),
         TestCase("RND V4, 28", 0xC428, true),
         TestCase("DRW V4, V5, 0xF", 0xD45F, true),
         TestCase("SKP V4", 0xE49E, true),
@@ -52,10 +52,10 @@ void Tester::parse_test_cases() {
     for (const auto &test_case: cases) {
         auto tokenizer = Tokenizer();
         const auto tokens = tokenizer.tokenize(test_case.instr);
-        auto parser = Parser(tokens);
+        auto parser = Parser();
 
         try {
-            const auto opcode = parser.parse();
+            const auto opcode = parser.parse(tokens);
             if (opcode != test_case.expected_opcode) {
                 std::cerr << "ERROR: " << test_case.instr
                         << " failed! (opcode mismatch, expected "
@@ -84,7 +84,7 @@ std::vector<uint16_t> Tester::parse_simple_program() {
         "LD V1, 10",
         "LD V2, 10",
         "DRW V1, V2, 0x5",
-        "JP 20C"
+        "JP 0x20C"
     };
 
     std::vector<uint16_t> opcodes = {};
@@ -92,8 +92,8 @@ std::vector<uint16_t> Tester::parse_simple_program() {
     for (const auto &instr: instructions) {
         auto tokenizer = Tokenizer();
         const auto tokens = tokenizer.tokenize(instr);
-        auto parser = Parser(tokens);
-        opcodes.push_back(parser.parse());
+        auto parser = Parser();
+        opcodes.push_back(parser.parse(tokens));
     }
 
     return opcodes;

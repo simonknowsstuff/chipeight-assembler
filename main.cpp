@@ -14,13 +14,9 @@ int main(int argc, char *argv[]) {
     auto reader = Reader(argv[1]);
     auto tokenizer = Tokenizer();
     auto translator = Translator();
-    while (auto line = reader.read_line()) {
-        std::vector<Token> tokens = tokenizer.tokenize(*line);
-        auto parser = Parser(tokens);
-        uint16_t parsed_opcode = parser.parse();
-        std::cout << parsed_opcode << std::endl;
-        translator.add_opcode(parsed_opcode);
-    }
+    auto parser = Parser();
+    auto instructions = parser.parse_file(reader, tokenizer);
+    translator.load_instructions(instructions);
     translator.translate_to_file(argv[2]);
 
     return 0;

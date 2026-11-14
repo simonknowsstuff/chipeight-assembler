@@ -6,7 +6,7 @@
 
 class Reader {
 private:
-    std::ifstream rom_file;
+    std::ifstream asm_file;
 
 public:
     Reader(const std::string& filename);

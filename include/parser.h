@@ -1,33 +1,41 @@
 #ifndef CHIPEIGHT_ASSEMBLER_INSTRUCTIONS_H
 #define CHIPEIGHT_ASSEMBLER_INSTRUCTIONS_H
 #include <cstdint>
+#include <map>
 #include <vector>
+#include <optional>
+#include "reader.h"
 #include "token.h"
+#include "instruction.h"
+#include "tokenizer.h"
+#include "parser.h"
 
 class ParsingErrorException : public std::exception {
 private:
     std::string message;
-    std::uint8_t current_addr;
 
 public:
-    ParsingErrorException(const char* msg) :
-    message(msg) {}
+    ParsingErrorException(const char *msg) : message(msg) {
+    }
 
-    ParsingErrorException(const std::string& string) :
-    message(string) {}
+    ParsingErrorException(const std::string &string) : message(string) {
+    }
 
     // Override what() method
-    const char* what() const noexcept override {
+    const char *what() const noexcept override {
         return message.c_str();
     }
 };
 
 class Parser {
 private:
+    // Initialise variables
     std::vector<Token> _tokens = {};
     int pos = 0;
-    int opcode_pos = 3;
-    uint16_t opcode = 0x0000;
+    uint16_t current_addr = 0x200;
+    Instruction current_instr = Instruction(0x0000, true, {});
+    // Map labels to addresses
+    std::map<std::string, uint16_t> valid_labels = {};
 
     // Instructions
     void parse_sys();
@@ -75,6 +83,8 @@ private:
 
     void parse_comma();
 
+    void parse_colon();
+
     void parse_key_press();
 
     void parse_delay_timer();
@@ -89,7 +99,9 @@ private:
 
     void parse_f();
 
-    void parse_label();
+    void parse_label_start();
+
+    uint16_t parse_label();
 
     uint16_t parse_hex(char hex);
 
@@ -101,10 +113,14 @@ private:
 
     uint16_t parse_nibble();
 
+    uint16_t parse_addr_or_label();
+
+    std::optional<Instruction> parse(std::vector<Token> tokens);
+
 public:
     Parser();
 
-    uint16_t parse(std::vector<Token> tokens);
+    std::vector<Instruction> parse_file(Reader &reader, Tokenizer &tokenizer);
 };
 
 #endif //CHIPEIGHT_ASSEMBLER_INSTRUCTIONS_H

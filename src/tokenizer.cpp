@@ -1,5 +1,7 @@
 #include "../include/tokenizer.h"
 
+#include <iostream>
+
 Tokenizer::Tokenizer() {
     // Initialize tokenizer
 }
@@ -22,9 +24,6 @@ std::vector<Token> Tokenizer::tokenize(std::string input) {
 }
 
 Token::Type Tokenizer::determine_token(const std::string& token) {
-    // if (is_label(token)) {
-    //     return Token::label;
-    // }
     if (is_instr(token)) {
         return Token::instr;
     }
@@ -39,6 +38,9 @@ Token::Type Tokenizer::determine_token(const std::string& token) {
     }
     if (is_comma(token)) {
         return Token::comma;
+    }
+    if (is_colon(token)) {
+        return Token::colon;
     }
     if (is_sound_timer(token)) {
         return Token::sound_timer;
@@ -64,18 +66,21 @@ Token::Type Tokenizer::determine_token(const std::string& token) {
     if (is_nibble(token)) {
         return Token::nibble;
     }
+    if (is_label(token)) {
+        return Token::label;
+    }
     throw std::runtime_error("Could not determine token type for " + token);
 }
-
-// bool Tokenizer::is_label(const std::string& token) {
-//     return std::regex_match(token, reg_matcher);
-// }
 
 bool Tokenizer::is_instr(const std::string& token) {
     return std::find(
                begin(INSTRUCTIONS),
                end(INSTRUCTIONS),
                token) != end(INSTRUCTIONS);
+}
+
+bool Tokenizer::is_label(const std::string &token) {
+    return std::regex_match(token, label_matcher);
 }
 
 bool Tokenizer::is_register(const std::string& token) {
@@ -92,6 +97,10 @@ bool Tokenizer::is_address(const std::string& token) {
 
 bool Tokenizer::is_comma(const std::string& token) {
     return token == ",";
+}
+
+bool Tokenizer::is_colon(const std::string &token) {
+    return token == ":";
 }
 
 bool Tokenizer::is_sound_timer(const std::string& token) {

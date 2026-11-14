@@ -11,8 +11,9 @@ add_executable(chipeight_assembler main.cpp
         include/parser.h
         src/translator.cpp
         include/translator.h
-        src/tester.cpp
-        include/tester.h
+#        src/tester.cpp
+#        include/tester.h
         src/reader.cpp
         include/reader.h
+        include/instruction.h
 )

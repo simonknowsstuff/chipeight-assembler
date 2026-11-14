@@ -14,6 +14,7 @@ public:
         byte,
         addr,
         comma,
+        colon,
         sound_timer,
         delay_timer,
         i,
